@@ -6,6 +6,7 @@ import cors from 'cors'
 import {useServer} from 'graphql-ws/lib/use/ws'
 import { WebSocketServer } from 'ws';
 import {expressMiddleware} from '@apollo/server/express4';
+import config from './shared/config/index.js'
 
 const app=express()
 const httpServer=http.createServer(app);
@@ -59,8 +60,8 @@ await server.start()
 
 app.use('/api',expressMiddleware(server))
 
-httpServer.listen(8080,()=>{
-    console.log(`Server is listening on port`);
+httpServer.listen(config.port,()=>{
+    console.log(`Server is listening on port ${config.port}`);
 })
 
 
