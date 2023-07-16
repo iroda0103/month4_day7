@@ -1,0 +1,28 @@
+users
+	-id
+	-first_name
+	-last_name
+	-username
+	-password
+	-role super_admin, admin, user
+	-is_deleted
+
+posts
+	-id
+	-title
+	-content
+	-user_id
+	-is_verified
+	-verified_by
+
+Adminlar => super_admin va admin nazarda tutiladi
+
+TZ
+- Roli 'user' bo'lgan foydalanuvchi o'zi mustaqil ro'yxatdan o'ta oladi
+- Role 'admin' bo'lganlarni default 'super_admin' qo'shadi
+- Adminlar barcha postlarni ko'ra oladi
+- Userlar faqat hammaning tasdiqlangan va o'zining tasdiqlanmagan postlarini ko'rishi mumkin
+- User, Adminlar o'zini ma'lumotlarini tahrirlay oladi
+
+GraphQL schemani o'zingiz tuzing
+
