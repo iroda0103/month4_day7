@@ -1,5 +1,5 @@
 import knex from "knex";
-import config from "../shared/config";
+import config from "../shared/config/index.js";
 
 const db=knex({
     client:'postgresql',
