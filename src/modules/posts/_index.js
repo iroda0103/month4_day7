@@ -7,6 +7,7 @@ import { showPost } from "./show-post.js";
 import { editPost } from "./edit-post.js";
 import { removePost } from "./remove-post.js";
 import { showUser } from "../users/show-user.js";
+import { isLoggedIn } from "../../graphql/is-loggedin.js";
 
 const typeDefs = readFileSync(
   join(process.cwd(), "src", "modules", "posts", "_schema.gql"),
@@ -16,6 +17,8 @@ const typeDefs = readFileSync(
 const resolvers = {
   Query: {
     posts: async (_, args, contextValue) => {
+      isLoggedIn(contextValue)
+
       return listPosts(contextValue);
     },
     post: (_, args) => {
@@ -23,31 +26,31 @@ const resolvers = {
     },
   },
   Mutation: {
-    createPost: async (_, args) => {
-      const result = await addPost(args.input);
+    createPost: async (_, args,contextValue) => {
+      isLoggedIn(contextValue)
 
+      const result = await addPost(args.input);
+       
       pubsub.publish("POST_CREATED", { postCreated: result });
 
       return result;
     },
-    updatePost: (_, args) => {
-      return editPost({ id: args.id, ...args.input });
+    updatePost: (_, args,contextValue) => {
+      isLoggedIn(contextValue)
+
+      return editPost({ id: args.id, ...args.input },contextValue.user.id);
     },
     removePost: (_, args) => {
+      isLoggedIn(contextValue)
       return removePost({ id: args.id });
     },
   },
-  // Subscription: {
-  //   postCreated: {
-  //     subscribe: () => pubsub.asyncIterator(['POST_CREATED']),
-  //   }
-  // },
+ 
   Post: {
     user: (parent) => {
       return showUser({ id: parent.user_id });
     },
     verified_by: (parent,args,contextValue)=>{
-      console.log(parent,contextValue);
      return showUser({id:parent.verified_by})
     },
   },

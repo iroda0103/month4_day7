@@ -3,6 +3,9 @@ import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHt
 import { useServer } from "graphql-ws/lib/use/ws";
 import { WebSocketServer } from "ws";
 import schema from "./schema.js";
+import { expressMiddleware } from "@apollo/server/express4";
+import jwt from "jsonwebtoken";
+import config from "../shared/config/index.js";
 
 export const buildGraphqlServer = function (httpServer) {
   const wsserver = new WebSocketServer({
@@ -31,6 +34,18 @@ export const buildGraphqlServer = function (httpServer) {
     ],
   });
 
-  return server;
-  
+  const serverMiddleware = () =>
+    expressMiddleware(server, {
+      context: ({ req }) => {
+        const token = req.headers.authorization;
+        
+        if (token) {
+          const decoded = jwt.verify(token, config.jwt.secret);
+          return { user: decoded.user };
+        }
+
+        return { user: {} };
+      },
+    });
+  return { server, serverMiddleware };
 };

@@ -57,7 +57,7 @@ const resolvers = {
 
       return editUser({ id: args.id, ...args.input });
     },
-    removeUser: (_, args) => {
+    removeUser: (_, args,contextValue) => {
       isLoggedIn(contextValue);
 
       if (contextValue.user.id != args.id) {

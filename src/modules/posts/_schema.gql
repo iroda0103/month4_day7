@@ -19,13 +19,15 @@ type Post {
   content: String
   user: User
   is_verified: Boolean,
-  verified_by: User!,
+  verified_by: User,
 }
 
 input CreatePostInput {
   title: String!
   content: String!
   user_id: String!
+  is_verified: Boolean,
+  verified_by: ID,
 }
 
 input UpdatePostInput {
